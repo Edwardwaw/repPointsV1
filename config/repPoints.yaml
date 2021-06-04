@@ -1,0 +1,65 @@
+model_name: repPoints
+data:
+  train_annotation_path: /home/ubuntu/wangchao/dataset/coco/annotations/instances_train2017.json
+  val_annotation_path: /home/ubuntu/wangchao/dataset/coco/annotations/instances_val2017.json
+  train_img_root: /home/ubuntu/wangchao/dataset/coco/train2017
+  val_img_root: /home/ubuntu/wangchao/dataset/coco/val2017
+  min_thresh: 800
+  max_thresh: 1333
+  use_crowd: False
+  batch_size: 8
+  num_workers: 4
+  debug: False
+  remove_blank: True
+
+
+
+model:
+  # model
+  "num_cls": 80
+  "point_strides": [8, 16, 32, 64, 128]
+  "backbone": "resnet50"
+  "fpn_channel": 256
+  "feat_channel": 256
+  "point_feat_channel": 256
+  "num_conv": 3
+  "num_point": 9
+  "gradient_mul": 0.1
+  "point_base_scale": 4
+  "use_grid_points": False
+  "center_init": True
+  # assigner
+  # loss
+  "transform_method": 'minmax'
+  "moment_mul": 0.01
+  "alpha": 0.25
+  "gamma": 2.0
+  "cls_weight": 1.0
+  "beta_init": 0.11
+  "loss_init_weight": 0.5
+  "beta_refine": 0.11
+  "loss_refine_weight": 1.0
+
+
+
+
+optim:
+  optimizer: Adam
+  lr: 0.0001
+  momentum: 0.9
+  milestones: [17,23]
+  warm_up_epoch: 1
+  weight_decay: 0.0001
+  epochs: 25
+  sync_bn: True
+
+
+val:
+  interval: 1
+  weight_path: weights
+  conf_thresh: 0.05
+  iou_thresh: 0.5
+  max_det: 100
+
+
+gpus: 0,1,2,3,4,5,6,7
